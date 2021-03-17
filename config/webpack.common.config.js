@@ -2,6 +2,8 @@ const path = require('path');
 const argv = require('minimist')(process.argv.slice(2));
 const RELEASE = argv.release;
 const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
   mode: RELEASE ? 'production' : 'development',
@@ -35,7 +37,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: [
+          RELEASE ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader'
+        ]
       }
     ]
   },
@@ -83,7 +88,11 @@ module.exports = {
             ascii_only: true
           }
         }
-      })
+      }),
+      new OptimizeCSSAssetsPlugin()
     ]
-  }
+  },
+  plugins: [
+    RELEASE ? new MiniCssExtractPlugin() : null
+  ].filter(Boolean)
 };
