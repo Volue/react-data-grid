@@ -199,10 +199,17 @@ class InteractionMasks extends React.Component {
       this.onPressTab(e);
     } else if (this.isKeyboardNavigationEvent(e)) {
       this.changeCellFromEvent(e);
-    } else if (isKeyPrintable(e.keyCode) || [keyCodes.Backspace, keyCodes.Delete, keyCodes.Enter].indexOf(e.keyCode) !== -1) {
+    } else if (isKeyPrintable(e.keyCode) || this.isKeyOpeningEditor(e.keyCode)) {
       this.openEditor(e);
     }
   };
+
+  isKeyOpeningEditor = (keyCode) => {
+    if (typeof this.props.isKeyOpeningEditor === 'function')
+      return this.props.isKeyOpeningEditor(keyCode);
+    else
+      return [keyCodes.Backspace, keyCodes.Delete, keyCodes.Enter].indexOf(keyCode) !== -1;
+  }
 
   isSelectedCellEditable = () => {
     const { enableCellSelect, columns, rowGetter, onCheckCellIsEditable } = this.props;
