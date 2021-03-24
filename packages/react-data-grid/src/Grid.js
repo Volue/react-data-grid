@@ -70,7 +70,8 @@ class Grid extends React.Component {
     onScroll: PropTypes.func,
     scrollLeft: PropTypes.number,
     RowsContainer: PropTypes.node,
-    editorPortalTarget: PropTypes.instanceOf(Element).isRequired
+    editorPortalTarget: PropTypes.instanceOf(Element).isRequired,
+    isKeyOpeningEditor: PropTypes.func
   };
 
   static defaultProps = {
@@ -214,6 +215,7 @@ class Grid extends React.Component {
                   onCommit={this.props.onCommit}
                   RowsContainer={this.props.RowsContainer}
                   editorPortalTarget={this.props.editorPortalTarget}
+                  isKeyOpeningEditor={this.props.isKeyOpeningEditor ? this.props.isKeyOpeningEditor : undefined}
                 />
             </div>
         :

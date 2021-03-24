@@ -76,7 +76,8 @@ class Canvas extends React.PureComponent {
     onCellRangeSelectionUpdated: PropTypes.func,
     onCellRangeSelectionCompleted: PropTypes.func,
     onCommit: PropTypes.func.isRequired,
-    editorPortalTarget: PropTypes.instanceOf(Element).isRequired
+    editorPortalTarget: PropTypes.instanceOf(Element).isRequired,
+    isKeyOpeningEditor: PropTypes.func
   };
 
   static defaultProps = {
@@ -416,6 +417,7 @@ class Canvas extends React.PureComponent {
           getRowTop={this.getRowTop}
           getRowColumns={this.getRowColumns}
           editorPortalTarget={this.props.editorPortalTarget}
+          isKeyOpeningEditor={this.props.isKeyOpeningEditor ? this.props.isKeyOpeningEditor : undefined}
         />
         <RowsContainer id={contextMenu ? contextMenu.props.id : 'rowsContainer'}>
           <div style={{ width: totalColumnWidth }}>{rows}</div>
