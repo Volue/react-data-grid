@@ -117,7 +117,7 @@ class HeaderCell extends React.Component {
     };
 
     const cell = (
-      <div ref={this.headerCellRef} className={className} style={style}>
+      <div ref={this.headerCellRef} data-testid={`headerCell-${column.key}`} className={className} style={style}>
         {this.getCell()}
         {resizeHandle}
       </div>

@@ -344,7 +344,7 @@ class Cell extends React.PureComponent {
   };
 
   render() {
-    const { column, expandableOptions, children } = this.props;
+    const { column, expandableOptions, children, 'data-testid': testId } = this.props;
 
     if (column.hidden) {
       return null;
@@ -364,6 +364,7 @@ class Cell extends React.PureComponent {
       <div
         className={className}
         style={style}
+        data-testid={testId}
         {...events}
         ref={this.setCellRef}
       >
