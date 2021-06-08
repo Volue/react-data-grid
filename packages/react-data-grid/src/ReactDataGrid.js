@@ -46,8 +46,6 @@ class ReactDataGrid extends React.Component {
     minWidth: PropTypes.number,
     /** Deprecated: Legacy prop to turn on row selection. Use rowSelection props instead*/
     enableRowSelect: deprecate(PropTypes.func, deprecationWarning('enableRowSelect', 'rowSelection')),
-    /** Deprecated: Function called when grid is updated via a cell commit. Use onGridRowsUpdated instead*/
-    onRowUpdated: deprecate(PropTypes.func, deprecationWarning('onRowUpdated', 'onGridRowsUpdated')),
     /** 	A function called for each rendered row that should return a plain key/value pair object */
     rowGetter: PropTypes.func.isRequired,
     /** The number of rows to be rendered */
@@ -486,11 +484,7 @@ class ReactDataGrid extends React.Component {
  */
   onGridRowsUpdated = (cellKey, fromRow, toRow, updated, action, originRow) => {
     const { rowGetter, rowKey, onGridRowsUpdated } = this.props;
-    // Deprecated prop
-    // to be removed in next major release
-    if (isFunction(this.props.onRowUpdated)) {
-      this.props.onRowUpdated({ updated, rowIdx: fromRow, cellKey, value: updated[cellKey] });
-    }
+
     if (!isFunction(onGridRowsUpdated)) {
       return;
     }

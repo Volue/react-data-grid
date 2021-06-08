@@ -59,11 +59,13 @@ export default class ClickOutside extends React.Component {
   isClickedInside = false;
 
   componentDidMount() {
-    document.addEventListener('click', this.handleDocumentClick);
+    document.addEventListener('mousedown', this.handleDocumentClick);
+    document.addEventListener('touchstart', this.handleDocumentClick);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleDocumentClick);
+    document.removeEventListener('mousedown', this.handleDocumentClick);
+    document.removeEventListener('touchstart', this.handleDocumentClick);
   }
 
   handleDocumentClick = (e) => {
