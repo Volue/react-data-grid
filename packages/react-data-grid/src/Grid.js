@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Header from './Header';
 import Viewport from './Viewport';
 import cellMetaDataShape from 'common/prop-shapes/CellMetaDataShape';
+import { DEFINE_SORT } from 'common/cells/headerCells/SortableHeaderCell';
+import SortDataShape from 'common/prop-shapes/SortDataShape';
 import { isFrozen } from './ColumnUtils';
 require('../../../themes/react-data-grid-core.css');
 
@@ -38,7 +40,8 @@ class Grid extends React.Component {
     rowsCount: PropTypes.number,
     sortColumn: PropTypes.string,
     cellMetaData: PropTypes.shape(cellMetaDataShape).isRequired,
-    sortDirection: PropTypes.oneOf(['ASC', 'DESC', 'NONE']),
+    sortDirection: PropTypes.oneOf(Object.keys(DEFINE_SORT)),
+    sort: SortDataShape,
     rowOffsetHeight: PropTypes.number.isRequired,
     onViewportKeydown: PropTypes.func.isRequired,
     onViewportKeyup: PropTypes.func,
@@ -165,6 +168,7 @@ class Grid extends React.Component {
           sortColumn={this.props.sortColumn}
           sortDirection={this.props.sortDirection}
           draggableHeaderCell={this.props.draggableHeaderCell}
+          sort={this.props.sort}
           onSort={this.props.onSort}
           onHeaderDrop={this.props.onHeaderDrop}
           getValidFilterValues={this.props.getValidFilterValues}

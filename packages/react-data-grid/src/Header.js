@@ -6,7 +6,9 @@ import HeaderRow from './HeaderRow';
 import getScrollbarSize  from './getScrollbarSize';
 import PropTypes from 'prop-types';
 import cellMetaDataShape from 'common/prop-shapes/CellMetaDataShape';
+import SortDataShape from 'common/prop-shapes/SortDataShape';
 import { HeaderRowType } from 'common/constants';
+import areSortArraysEqual from './utils/areSortArraysEqual';
 require('../../../themes/react-data-grid-header.css');
 
 class Header extends React.Component {
@@ -17,6 +19,7 @@ class Header extends React.Component {
     headerRows: PropTypes.array.isRequired,
     sortColumn: PropTypes.string,
     sortDirection: PropTypes.oneOf(['ASC', 'DESC', 'NONE']),
+    sort: SortDataShape,
     onSort: PropTypes.func,
     onColumnResize: PropTypes.func,
     onScroll: PropTypes.func,
@@ -37,6 +40,7 @@ class Header extends React.Component {
     || this.props.totalWidth !== nextProps.totalWidth
     || (this.props.headerRows.length !== nextProps.headerRows.length)
     || (this.state.resizing !== nextState.resizing)
+    || !areSortArraysEqual(nextProps.sort, this.props.sort)
     || this.props.sortColumn !== nextProps.sortColumn
     || this.props.sortDirection !== nextProps.sortDirection;
     return update;
@@ -116,6 +120,7 @@ class Header extends React.Component {
           onHeaderDrop={this.props.onHeaderDrop}
           sortColumn={this.props.sortColumn}
           sortDirection={this.props.sortDirection}
+          sort={this.props.sort}
           onSort={this.props.onSort}
           onScroll={this.props.onScroll}
           getValidFilterValues={this.props.getValidFilterValues}

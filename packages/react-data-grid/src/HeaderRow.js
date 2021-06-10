@@ -7,6 +7,8 @@ import SortableHeaderCell from 'common/cells/headerCells/SortableHeaderCell';
 import FilterableHeaderCell from 'common/cells/headerCells/FilterableHeaderCell';
 import HeaderCellType from './HeaderCellType';
 import { HeaderRowType } from 'common/constants';
+import SortDataShape from 'common/prop-shapes/SortDataShape';
+import areSortArraysEqual from './utils/areSortArraysEqual';
 import '../../../themes/react-data-grid-header.css';
 
 import PropTypes from 'prop-types';
@@ -31,6 +33,7 @@ class HeaderRow extends React.Component {
     style: PropTypes.shape(HeaderRowStyle),
     sortColumn: PropTypes.string,
     sortDirection: PropTypes.oneOf(Object.keys(SortableHeaderCell.DEFINE_SORT)),
+    sort: SortDataShape,
     cellRenderer: PropTypes.func,
     headerCellRenderer: PropTypes.func,
     filterable: PropTypes.bool,
@@ -50,6 +53,7 @@ class HeaderRow extends React.Component {
       || nextProps.height !== this.props.height
       || nextProps.columns !== this.props.columns
       || !shallowEqual(nextProps.style, this.props.style)
+      || !areSortArraysEqual(nextProps.sort, this.props.sort)
       || this.props.sortColumn !== nextProps.sortColumn
       || this.props.sortDirection !== nextProps.sortDirection
     );
@@ -74,8 +78,16 @@ class HeaderRow extends React.Component {
   };
 
   getSortableHeaderCell = (column) => {
-    const sortDirection = (this.props.sortColumn === column.key) ? this.props.sortDirection : SortableHeaderCell.DEFINE_SORT.NONE;
     const sortDescendingFirst = (column.sortDescendingFirst === undefined) ? false : column.sortDescendingFirst;
+
+    let sortDirection;
+    if (this.props.sort) {
+      const columnSort = this.props.sort.filter((s) => s.column === column.key)[0];
+      sortDirection = columnSort ? columnSort.direction : SortableHeaderCell.DEFINE_SORT.NONE;
+    } else {
+      sortDirection = (this.props.sortColumn === column.key) ? this.props.sortDirection : SortableHeaderCell.DEFINE_SORT.NONE;
+    }
+
     return <SortableHeaderCell columnKey={column.key} onSort={this.props.onSort} sortDirection={sortDirection} sortDescendingFirst={sortDescendingFirst} headerRenderer={column.headerRenderer} />;
   };
 
