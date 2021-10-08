@@ -15,7 +15,8 @@
       "module": "./lib/bundle.js",
       "require": "./lib/bundle.cjs",
       "default": "./lib/bundle.js"
-    }
+    },
+    "./lib/": "./lib/"
   },
   "browser": "./lib/bundle.js",
   "main": "./lib/bundle.cjs",
