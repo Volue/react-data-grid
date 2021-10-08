@@ -377,6 +377,12 @@ function DataGrid<R, SR, K extends Key>(
     scrollToColumn(idx: number) {
       scrollToCell({ idx });
     },
+    getScroll() {
+      return {
+        scrollTop,
+        scrollLeft
+      };
+    },
     scrollToRow(rowIdx: number) {
       const { current } = gridRef;
       if (!current) return;
