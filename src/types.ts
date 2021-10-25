@@ -31,6 +31,7 @@ export interface Column<TRow, TSummaryRow = unknown> {
   readonly frozen?: Maybe<boolean>;
   /** Enable resizing of a column */
   readonly resizable?: Maybe<boolean>;
+  readonly areCellsDraggable?: Maybe<boolean>;
   /** Enable sorting of a column */
   readonly sortable?: Maybe<boolean>;
   /** Sets the column sort order to be descending instead of ascending the first time the column is sorted */

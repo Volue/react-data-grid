@@ -52,7 +52,7 @@ function Row<R, SR>(
 
   for (let index = 0; index < viewportColumns.length; index++) {
     const column = viewportColumns[index];
-    const { idx } = column;
+    const { idx, areCellsDraggable } = column;
     const colSpan = getColSpan(column, lastFrozenColumnIndex, { type: 'ROW', row });
     if (colSpan !== undefined) {
       index += colSpan - 1;
@@ -80,10 +80,10 @@ function Row<R, SR>(
           colSpan={colSpan}
           row={row}
           isCopied={copiedCellIdx === idx}
-          setDraggedOverCellIdx={setDraggedOverCellIdx}
+          setDraggedOverCellIdx={areCellsDraggable ? setDraggedOverCellIdx : undefined}
           isDraggedOver={isDraggedOver}
           isCellSelected={isCellSelected}
-          dragHandle={isCellSelected ? selectedCellDragHandle : undefined}
+          dragHandle={areCellsDraggable && isCellSelected ? selectedCellDragHandle : undefined}
           onRowClick={onRowClick}
           onRowDoubleClick={onRowDoubleClick}
           onRowChange={handleRowChange}

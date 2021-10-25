@@ -17,6 +17,7 @@ const columns: readonly Column<Row>[] = [
   {
     key: 'col1',
     name: 'Col 1',
+    areCellsDraggable: true,
     editor() {
       return null;
     }
@@ -24,6 +25,7 @@ const columns: readonly Column<Row>[] = [
   {
     key: 'col2',
     name: 'Col 2',
+    areCellsDraggable: true,
     editor() {
       return null;
     }
@@ -31,6 +33,7 @@ const columns: readonly Column<Row>[] = [
   {
     key: 'col3',
     name: 'Col 3',
+    areCellsDraggable: true,
     editor() {
       return null;
     }
@@ -38,6 +41,7 @@ const columns: readonly Column<Row>[] = [
   {
     key: 'col4',
     name: 'Col 4',
+    areCellsDraggable: true,
     editable: false,
     editor() {
       return null;
