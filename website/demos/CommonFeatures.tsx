@@ -354,7 +354,12 @@ export default function CommonFeatures() {
       }}
       selectedRows={selectedRows}
       onSelectedRowsChange={setSelectedRows}
-      onRowsChange={setRows}
+      onRowsChange={(updatedRow, { index }) => {
+        const rowsCopy = [...rows];
+        rowsCopy[index] = updatedRow;
+
+        setRows(rowsCopy);
+      }}
       sortColumns={sortColumns}
       onSortColumnsChange={setSortColumns}
       summaryRows={summaryRows}

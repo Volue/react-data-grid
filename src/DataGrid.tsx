@@ -94,7 +94,7 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   summaryRows?: Maybe<readonly SR[]>;
   /** The getter should return a unique key for each row */
   rowKeyGetter?: Maybe<(row: R) => K>;
-  onRowsChange?: Maybe<(rows: R[], data: RowsChangeData<R, SR>) => void>;
+  onRowsChange?: Maybe<(updatedRow: R, data: RowsChangeData) => void>;
 
   /**
    * Dimensions props
@@ -236,13 +236,13 @@ function DataGrid<R, SR, K extends Key>(
   );
   const [copiedCell, setCopiedCell] = useState<{ row: R; columnKey: string } | null>(null);
   const [isDragging, setDragging] = useState(false);
-  const [draggedOverRowIdx, setOverRowIdx] = useState<number | undefined>(undefined);
+  const [draggedOverCellIdx, setOverCellIdx] = useState<number | undefined>(undefined);
 
   /**
    * refs
    */
   const prevSelectedPosition = useRef(selectedPosition);
-  const latestDraggedOverRowIdx = useRef(draggedOverRowIdx);
+  const latestDraggedOverCellIdx = useRef(draggedOverCellIdx);
   const lastSelectedRowIdx = useRef(-1);
 
   /**
@@ -410,9 +410,9 @@ function DataGrid<R, SR, K extends Key>(
     [onColumnResize]
   );
 
-  const setDraggedOverRowIdx = useCallback((rowIdx?: number) => {
-    setOverRowIdx(rowIdx);
-    latestDraggedOverRowIdx.current = rowIdx;
+  const setDraggedOverCellIdx = useCallback((idx?: number) => {
+    setOverCellIdx(idx);
+    latestDraggedOverCellIdx.current = idx;
   }, []);
 
   /**
@@ -566,15 +566,14 @@ function DataGrid<R, SR, K extends Key>(
     return hasGroups ? rawRows.indexOf(rows[rowIdx] as R) : rowIdx;
   }
 
-  function updateRow(rowIdx: number, row: R) {
+  function updateRow(rowIdx: number, updatedRow: R) {
     if (typeof onRowsChange !== 'function') return;
     const rawRowIdx = getRawRowIdx(rowIdx);
-    if (row === rawRows[rawRowIdx]) return;
-    const updatedRows = [...rawRows];
-    updatedRows[rawRowIdx] = row;
-    onRowsChange(updatedRows, {
-      indexes: [rawRowIdx],
-      column: columns[selectedPosition.idx]
+    if (updatedRow === rawRows[rawRowIdx]) return;
+
+    onRowsChange(updatedRow, {
+      index: rawRowIdx,
+      columnKeys: [columns[selectedPosition.idx]?.key]
     });
   }
 
@@ -834,18 +833,6 @@ function DataGrid<R, SR, K extends Key>(
     selectCell(nextSelectedCellPosition);
   }
 
-  function getDraggedOverCellIdx(currentRowIdx: number): number | undefined {
-    if (draggedOverRowIdx === undefined) return;
-    const { rowIdx } = selectedPosition;
-
-    const isDraggedOver =
-      rowIdx < draggedOverRowIdx
-        ? rowIdx < currentRowIdx && currentRowIdx <= draggedOverRowIdx
-        : rowIdx > currentRowIdx && currentRowIdx >= draggedOverRowIdx;
-
-    return isDraggedOver ? selectedPosition.idx : undefined;
-  }
-
   function getDragHandle(rowIdx: number) {
     if (
       selectedPosition.rowIdx !== rowIdx ||
@@ -862,11 +849,11 @@ function DataGrid<R, SR, K extends Key>(
         columns={columns}
         selectedPosition={selectedPosition}
         isCellEditable={isCellEditable}
-        latestDraggedOverRowIdx={latestDraggedOverRowIdx}
+        latestDraggedOverCellIdx={latestDraggedOverCellIdx}
         onRowsChange={onRowsChange}
         onFill={onFill}
         setDragging={setDragging}
-        setDraggedOverRowIdx={setDraggedOverRowIdx}
+        setDraggedOverCellIdx={setDraggedOverCellIdx}
       />
     );
   }
@@ -1014,8 +1001,8 @@ function DataGrid<R, SR, K extends Key>(
               : undefined
           }
           selectedCellIdx={selectedRowIdx === rowIdx ? selectedIdx : undefined}
-          draggedOverCellIdx={getDraggedOverCellIdx(rowIdx)}
-          setDraggedOverRowIdx={isDragging ? setDraggedOverRowIdx : undefined}
+          draggedOverCellIdx={draggedOverCellIdx}
+          setDraggedOverCellIdx={isDragging ? setDraggedOverCellIdx : undefined}
           lastFrozenColumnIndex={lastFrozenColumnIndex}
           onRowChange={handleFormatterRowChangeLatest}
           selectCell={selectViewportCellLatest}
@@ -1031,7 +1018,7 @@ function DataGrid<R, SR, K extends Key>(
   // Reset the positions if the current values are no longer valid. This can happen if a column or row is removed
   if (selectedPosition.idx > maxColIdx || selectedPosition.rowIdx > maxRowIdx) {
     setSelectedPosition(initialPosition);
-    setDraggedOverRowIdx(undefined);
+    setDraggedOverCellIdx(undefined);
   }
 
   return (

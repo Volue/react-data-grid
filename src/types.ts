@@ -121,6 +121,7 @@ export interface CellRendererProps<TRow, TSummaryRow>
   isDraggedOver: boolean;
   isCellSelected: boolean;
   dragHandle: ReactElement<React.HTMLAttributes<HTMLDivElement>> | undefined;
+  setDraggedOverCellIdx: ((overCellIdx: number) => void) | undefined;
   onRowChange: (newRow: TRow) => void;
 }
 
@@ -142,7 +143,7 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   onRowClick: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
   onRowDoubleClick: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
   rowClass: Maybe<(row: TRow) => Maybe<string>>;
-  setDraggedOverRowIdx: ((overRowIdx: number) => void) | undefined;
+  setDraggedOverCellIdx: ((overCellIdx: number) => void) | undefined;
   selectCell: (
     row: TRow,
     column: CalculatedColumn<TRow, TSummaryRow>,
@@ -150,9 +151,9 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   ) => void;
 }
 
-export interface RowsChangeData<R, SR = unknown> {
-  indexes: number[];
-  column: CalculatedColumn<R, SR>;
+export interface RowsChangeData {
+  index: number;
+  columnKeys: string[];
 }
 
 export interface SelectRowEvent<TRow> {
@@ -162,9 +163,9 @@ export interface SelectRowEvent<TRow> {
 }
 
 export interface FillEvent<TRow> {
-  columnKey: string;
-  sourceRow: TRow;
-  targetRow: TRow;
+  row: TRow;
+  sourceColumnKey: string;
+  targetColumnKeys: string[];
 }
 
 export interface PasteEvent<TRow> {

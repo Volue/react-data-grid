@@ -173,8 +173,11 @@ export default function AllFeatures() {
   const [rows, setRows] = useState(createRows);
   const [selectedRows, setSelectedRows] = useState<ReadonlySet<string>>(() => new Set());
 
-  function handleFill({ columnKey, sourceRow, targetRow }: FillEvent<Row>): Row {
-    return { ...targetRow, [columnKey]: sourceRow[columnKey as keyof Row] };
+  function handleFill({ row, sourceColumnKey, targetColumnKeys }: FillEvent<Row>): Row {
+    return targetColumnKeys.reduce((updatedRow, targetColumnKey) => {
+      updatedRow[targetColumnKey] = row[sourceColumnKey];
+      return updatedRow;
+    }, { ...row });
   }
 
   function handlePaste({
@@ -203,7 +206,12 @@ export default function AllFeatures() {
         columns={columns}
         rows={rows}
         rowKeyGetter={rowKeyGetter}
-        onRowsChange={setRows}
+        onRowsChange={(updatedRow, { index }) => {
+          const rowsCopy = [...rows];
+          rowsCopy[index] = updatedRow;
+
+          setRows(rowsCopy);
+        }}
         onFill={handleFill}
         onPaste={handlePaste}
         rowHeight={30}

@@ -89,7 +89,7 @@ function TestGrid({ groupBy }: { groupBy: string[] | undefined }) {
   );
 
   function onFill(event: FillEvent<Row>) {
-    return event.targetRow;
+    return event.row;
   }
 
   function onPaste(event: PasteEvent<Row>) {
@@ -110,7 +110,12 @@ function TestGrid({ groupBy }: { groupBy: string[] | undefined }) {
       onSelectedRowsChange={setSelectedRows}
       expandedGroupIds={expandedGroupIds}
       onExpandedGroupIdsChange={setExpandedGroupIds}
-      onRowsChange={setRows}
+      onRowsChange={(updatedRow, { index }) => {
+        const rowsCopy = [...rows];
+        rowsCopy[index] = updatedRow;
+
+        setRows(rowsCopy);
+      }}
       onFill={onFill}
       onPaste={onPaste}
     />

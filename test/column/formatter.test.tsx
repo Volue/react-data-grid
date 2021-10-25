@@ -58,8 +58,8 @@ describe('Custom formatter component', () => {
 
   it('can update rows', () => {
     const column: Column<Row> = {
-      key: 'test',
-      name: 'test',
+      key: 'id',
+      name: 'ID',
       formatter(props) {
         function onClick() {
           props.onRowChange({ id: props.row.id + 1 });
@@ -72,7 +72,14 @@ describe('Custom formatter component', () => {
     function Test() {
       const [rows, setRows] = useState<readonly Row[]>([{ id: 1 }]);
 
-      return <DataGrid columns={[column]} rows={rows} onRowsChange={setRows} />;
+      const handleRowsChange = (updatedRow, { index }) => {
+        const rowsCopy = [...rows];
+        rowsCopy[index] = updatedRow;
+
+        setRows(rowsCopy);
+      };
+
+      return <DataGrid columns={[column]} rows={rows} onRowsChange={handleRowsChange} />;
     }
 
     render(

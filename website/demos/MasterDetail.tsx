@@ -101,19 +101,21 @@ const departmentColumns: readonly Column<DepartmentRow>[] = [
 export default function MasterDetail() {
   const [rows, setRows] = useState(createDepartments);
 
-  function onRowsChange(rows: DepartmentRow[], { indexes }: RowsChangeData<DepartmentRow>) {
-    const row = rows[indexes[0]];
-    if (row.type === 'MASTER') {
-      if (!row.expanded) {
-        rows.splice(indexes[0] + 1, 1);
+  function onRowsChange(updatedRow: DepartmentRow, { index }: RowsChangeData) {
+    const rowsCopy = [...rows];
+    rowsCopy[index] = updatedRow;
+
+    if (updatedRow.type === 'MASTER') {
+      if (!updatedRow.expanded) {
+        rowsCopy.splice(index + 1, 1);
       } else {
-        rows.splice(indexes[0] + 1, 0, {
+        rowsCopy.splice(index + 1, 0, {
           type: 'DETAIL',
-          id: row.id + 100,
-          parentId: row.id
+          id: updatedRow.id + 100,
+          parentId: updatedRow.id
         });
       }
-      setRows(rows);
+      setRows(rowsCopy);
     }
   }
 

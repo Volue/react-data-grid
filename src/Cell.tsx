@@ -32,7 +32,9 @@ function Cell<R, SR>({
   onRowClick,
   onRowDoubleClick,
   onRowChange,
+  onMouseEnter,
   selectCell,
+  setDraggedOverCellIdx,
   ...props
 }: CellRendererProps<R, SR>) {
   const { ref, tabIndex, onFocus } = useRovingCellRef(isCellSelected);
@@ -49,6 +51,11 @@ function Cell<R, SR>({
 
   function selectCellWrapper(openEditor?: boolean | null) {
     selectCell(row, column, openEditor);
+  }
+
+  function handleDragEnter(event: React.MouseEvent<HTMLDivElement>) {
+    setDraggedOverCellIdx?.(column.idx);
+    onMouseEnter?.(event);
   }
 
   function handleClick() {
@@ -79,6 +86,7 @@ function Cell<R, SR>({
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
+      onMouseEnter={handleDragEnter}
       onFocus={onFocus}
       {...props}
     >

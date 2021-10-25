@@ -24,8 +24,7 @@ function Row<R, SR>(
     onRowClick,
     onRowDoubleClick,
     rowClass,
-    setDraggedOverRowIdx,
-    onMouseEnter,
+    setDraggedOverCellIdx,
     top,
     height,
     onRowChange,
@@ -40,10 +39,6 @@ function Row<R, SR>(
     onRowChange(rowIdx, newRow);
   });
 
-  function handleDragEnter(event: React.MouseEvent<HTMLDivElement>) {
-    setDraggedOverRowIdx?.(rowIdx);
-    onMouseEnter?.(event);
-  }
 
   className = clsx(
     rowClassname,
@@ -65,6 +60,16 @@ function Row<R, SR>(
 
     const isCellSelected = selectedCellIdx === idx;
 
+    let isDraggedOver;
+    if (draggedOverCellIdx != null && selectedCellIdx != null) {
+      const isDraggedOverRight = selectedCellIdx < draggedOverCellIdx;
+
+      isDraggedOver = isDraggedOverRight ? selectedCellIdx < idx && idx <= draggedOverCellIdx
+        : selectedCellIdx > idx && idx >= draggedOverCellIdx;
+    } else {
+      isDraggedOver = false;
+    }
+
     if (isCellSelected && selectedCellEditor) {
       cells.push(selectedCellEditor);
     } else {
@@ -75,7 +80,8 @@ function Row<R, SR>(
           colSpan={colSpan}
           row={row}
           isCopied={copiedCellIdx === idx}
-          isDraggedOver={draggedOverCellIdx === idx}
+          setDraggedOverCellIdx={setDraggedOverCellIdx}
+          isDraggedOver={isDraggedOver}
           isCellSelected={isCellSelected}
           dragHandle={isCellSelected ? selectedCellDragHandle : undefined}
           onRowClick={onRowClick}
@@ -94,7 +100,6 @@ function Row<R, SR>(
         ref={useCombinedRefs(ref, rowRef)}
         tabIndex={tabIndex}
         className={className}
-        onMouseEnter={handleDragEnter}
         style={
           {
             top,

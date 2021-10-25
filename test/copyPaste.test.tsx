@@ -58,7 +58,12 @@ function CopyPasteTest({ allowCopyPaste = true }: { allowCopyPaste?: boolean }) 
       columns={columns}
       rows={rows}
       summaryRows={summaryRows}
-      onRowsChange={setRows}
+      onRowsChange={(updatedRow, { index }) => {
+        const rowsCopy = [...rows];
+        rowsCopy[index] = updatedRow;
+
+        setRows(rowsCopy);
+      }}
       onPaste={allowCopyPaste ? onPaste : undefined}
     />
   );

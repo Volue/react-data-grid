@@ -4,17 +4,41 @@ import userEvent from '@testing-library/user-event';
 import DataGrid from '../src';
 import type { Column, FillEvent } from '../src';
 import { fireEvent, render } from '@testing-library/react';
-import { getCellsAtRowIndex, getRows } from './utils';
+import { getCellsAtRowIndex } from './utils';
 
 interface Row {
-  col: string;
+  col1: string;
+  col2: string;
+  col3: string;
+  col4: string;
 }
 
 const columns: readonly Column<Row>[] = [
   {
-    key: 'col',
-    name: 'Col',
-    editable: (row) => row.col !== 'a4',
+    key: 'col1',
+    name: 'Col 1',
+    editor() {
+      return null;
+    }
+  },
+  {
+    key: 'col2',
+    name: 'Col 2',
+    editor() {
+      return null;
+    }
+  },
+  {
+    key: 'col3',
+    name: 'Col 3',
+    editor() {
+      return null;
+    }
+  },
+  {
+    key: 'col4',
+    name: 'Col 4',
+    editable: false,
     editor() {
       return null;
     }
@@ -23,17 +47,11 @@ const columns: readonly Column<Row>[] = [
 
 const initialRows: readonly Row[] = [
   {
-    col: 'a1'
+    col1: 'a1',
+    col2: 'a2',
+    col3: 'a3',
+    col4: 'a4'
   },
-  {
-    col: 'a2'
-  },
-  {
-    col: 'a3'
-  },
-  {
-    col: 'a4'
-  }
 ];
 
 function setup(allowDragFill = true) {
@@ -47,15 +65,23 @@ function setup(allowDragFill = true) {
 function DragFillTest({ allowDragFill = true }: { allowDragFill?: boolean }) {
   const [rows, setRows] = useState(initialRows);
 
-  function onFill({ columnKey, sourceRow, targetRow }: FillEvent<Row>): Row {
-    return { ...targetRow, [columnKey]: sourceRow[columnKey as keyof Row] };
+  function onFill({ row, sourceColumnKey, targetColumnKeys }: FillEvent<Row>): Row {
+    return targetColumnKeys.reduce((updatedRow, targetColumnKey) => {
+      updatedRow[targetColumnKey] = row[sourceColumnKey];
+      return updatedRow;
+    }, { ...row });
   }
 
   return (
     <DataGrid
       columns={columns}
       rows={rows}
-      onRowsChange={setRows}
+      onRowsChange={(updatedRow, { index }) => {
+        const rowsCopy = [...rows];
+        rowsCopy[index] = updatedRow;
+
+        setRows(rowsCopy);
+      }}
       onFill={allowDragFill ? onFill : undefined}
     />
   );
@@ -75,39 +101,39 @@ test('should allow dragFill if onFill is specified', () => {
   setup();
   userEvent.click(getCellsAtRowIndex(0)[0]);
   userEvent.dblClick(getDragHandle()!);
-  expect(getCellsAtRowIndex(1)[0]).toHaveTextContent('a1');
-  expect(getCellsAtRowIndex(2)[0]).toHaveTextContent('a1');
-  expect(getCellsAtRowIndex(3)[0]).toHaveTextContent('a4'); // readonly cell
+  expect(getCellsAtRowIndex(0)[1]).toHaveTextContent('a1');
+  expect(getCellsAtRowIndex(0)[2]).toHaveTextContent('a1');
+  expect(getCellsAtRowIndex(0)[3]).toHaveTextContent('a4'); // readonly cell
 });
 
-test('should update single row using mouse', () => {
+test('should update single cell using mouse', () => {
   setup();
   userEvent.click(getCellsAtRowIndex(0)[0]);
   fireEvent.mouseDown(getDragHandle()!, { buttons: 1 });
-  fireEvent.mouseEnter(getRows()[1]);
+  fireEvent.mouseEnter(getCellsAtRowIndex(0)[1]);
   fireEvent.mouseUp(window);
-  expect(getCellsAtRowIndex(1)[0]).toHaveTextContent('a1');
-  expect(getCellsAtRowIndex(2)[0]).toHaveTextContent('a3');
+  expect(getCellsAtRowIndex(0)[1]).toHaveTextContent('a1');
+  expect(getCellsAtRowIndex(0)[2]).toHaveTextContent('a3');
 });
 
-test('should update multiple rows using mouse', () => {
+test('should update multiple cells using mouse', () => {
   setup();
   userEvent.click(getCellsAtRowIndex(0)[0]);
   fireEvent.mouseDown(getDragHandle()!, { buttons: 1 });
-  fireEvent.mouseEnter(getRows()[3]);
+  fireEvent.mouseEnter(getCellsAtRowIndex(0)[3]);
   fireEvent.mouseUp(window);
-  expect(getCellsAtRowIndex(1)[0]).toHaveTextContent('a1');
-  expect(getCellsAtRowIndex(2)[0]).toHaveTextContent('a1');
-  expect(getCellsAtRowIndex(3)[0]).toHaveTextContent('a4'); // readonly cell
+  expect(getCellsAtRowIndex(0)[1]).toHaveTextContent('a1');
+  expect(getCellsAtRowIndex(0)[2]).toHaveTextContent('a1');
+  expect(getCellsAtRowIndex(0)[3]).toHaveTextContent('a4'); // readonly cell
 });
 
 test('should allow drag up using mouse', () => {
   setup();
-  userEvent.click(getCellsAtRowIndex(3)[0]);
+  userEvent.click(getCellsAtRowIndex(0)[3]);
   fireEvent.mouseDown(getDragHandle()!, { buttons: 1 });
-  fireEvent.mouseEnter(getRows()[0]);
+  fireEvent.mouseEnter(getCellsAtRowIndex(0)[0]);
   fireEvent.mouseUp(window);
   expect(getCellsAtRowIndex(0)[0]).toHaveTextContent('a4');
-  expect(getCellsAtRowIndex(1)[0]).toHaveTextContent('a4');
-  expect(getCellsAtRowIndex(2)[0]).toHaveTextContent('a4');
+  expect(getCellsAtRowIndex(0)[1]).toHaveTextContent('a4');
+  expect(getCellsAtRowIndex(0)[2]).toHaveTextContent('a4');
 });

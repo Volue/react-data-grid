@@ -144,35 +144,33 @@ export default function HeaderCell<R, SR>({
     }
   }
 
-  function getCell() {
-    if (column.headerRenderer) {
-      return (
-        <column.headerRenderer
-          column={column}
-          sortDirection={sortDirection}
-          priority={priority}
-          onSort={onSort}
-          allRowsSelected={allRowsSelected}
-          onAllRowsSelectionChange={onAllRowsSelectionChange}
-          isCellSelected={isCellSelected}
-        />
-      );
-    }
+  let cell;
 
-    if (column.sortable) {
-      return (
-        <SortableHeaderCell
-          onSort={onSort}
-          sortDirection={sortDirection}
-          priority={priority}
-          isCellSelected={isCellSelected}
-        >
-          {column.name}
-        </SortableHeaderCell>
-      );
-    }
-
-    return column.name;
+  if (column.headerRenderer) {
+    cell = (
+      <column.headerRenderer
+        column={column}
+        sortDirection={sortDirection}
+        priority={priority}
+        onSort={onSort}
+        allRowsSelected={allRowsSelected}
+        onAllRowsSelectionChange={onAllRowsSelectionChange}
+        isCellSelected={isCellSelected}
+      />
+    );
+  } else if (column.sortable) {
+    cell =  (
+      <SortableHeaderCell
+        onSort={onSort}
+        sortDirection={sortDirection}
+        priority={priority}
+        isCellSelected={isCellSelected}
+      >
+        {column.name}
+      </SortableHeaderCell>
+    );
+  } else {
+    cell = column.name;
   }
 
   return (
@@ -191,7 +189,7 @@ export default function HeaderCell<R, SR>({
       onClick={onClick}
       onPointerDown={column.resizable ? onPointerDown : undefined}
     >
-      {getCell()}
+      {cell}
     </div>
   );
 }
