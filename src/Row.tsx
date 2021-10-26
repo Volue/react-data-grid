@@ -8,7 +8,7 @@ import { getColSpan } from './utils';
 import { rowClassname } from './style';
 import type { RowRendererProps } from './types';
 
-function Row<R, SR>(
+export function Row<R, SR>(
   {
     className,
     rowIdx,
@@ -39,7 +39,6 @@ function Row<R, SR>(
     onRowChange(rowIdx, newRow);
   });
 
-
   className = clsx(
     rowClassname,
     `rdg-row-${rowIdx % 2 === 0 ? 'even' : 'odd'}`,
@@ -64,7 +63,8 @@ function Row<R, SR>(
     if (draggedOverCellIdx != null && selectedCellIdx != null) {
       const isDraggedOverRight = selectedCellIdx < draggedOverCellIdx;
 
-      isDraggedOver = isDraggedOverRight ? selectedCellIdx < idx && idx <= draggedOverCellIdx
+      isDraggedOver = isDraggedOverRight
+        ? selectedCellIdx < idx && idx <= draggedOverCellIdx
         : selectedCellIdx > idx && idx >= draggedOverCellIdx;
     } else {
       isDraggedOver = false;
@@ -79,6 +79,7 @@ function Row<R, SR>(
           column={column}
           colSpan={colSpan}
           row={row}
+          rowIdx={rowIdx}
           isCopied={copiedCellIdx === idx}
           setDraggedOverCellIdx={areCellsDraggable ? setDraggedOverCellIdx : undefined}
           isDraggedOver={isDraggedOver}

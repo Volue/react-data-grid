@@ -98,6 +98,7 @@ function GroupedRow<R, SR>({
             isCellSelected={selectedCellIdx === column.idx}
             column={column}
             row={row}
+            rowIdx={rowIdx}
             groupColumnIndex={idx}
             toggleGroup={toggleGroup}
           />

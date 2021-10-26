@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, Provider } from 'react';
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -72,6 +72,7 @@ export interface Position {
 export interface FormatterProps<TRow, TSummaryRow = unknown> {
   column: CalculatedColumn<TRow, TSummaryRow>;
   row: TRow;
+  rowIdx: number;
   isCellSelected: boolean;
   onRowChange: (row: TRow) => void;
 }
@@ -86,6 +87,7 @@ export interface GroupFormatterProps<TRow, TSummaryRow = unknown> {
   groupKey: unknown;
   column: CalculatedColumn<TRow, TSummaryRow>;
   row: GroupRow<TRow>;
+  rowIdx: number;
   childRows: readonly TRow[];
   isExpanded: boolean;
   isCellSelected: boolean;
@@ -118,6 +120,7 @@ export interface CellRendererProps<TRow, TSummaryRow>
   column: CalculatedColumn<TRow, TSummaryRow>;
   colSpan: number | undefined;
   row: TRow;
+  rowIdx: number;
   isCopied: boolean;
   isDraggedOver: boolean;
   isCellSelected: boolean;
@@ -138,6 +141,7 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   isRowSelected: boolean;
   top: number;
   height: number;
+  rowSelectionProvider?: Maybe<Provider<boolean | undefined>>;
   selectedCellEditor: ReactElement<EditorProps<TRow>> | undefined;
   selectedCellDragHandle: ReactElement<React.HTMLAttributes<HTMLDivElement>> | undefined;
   onRowChange: (rowIdx: number, newRow: TRow) => void;
@@ -145,11 +149,7 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   onRowDoubleClick: Maybe<(row: TRow, column: CalculatedColumn<TRow, TSummaryRow>) => void>;
   rowClass: Maybe<(row: TRow) => Maybe<string>>;
   setDraggedOverCellIdx: ((overCellIdx: number) => void) | undefined;
-  selectCell: (
-    row: TRow,
-    column: CalculatedColumn<TRow, TSummaryRow>,
-    enableEditor?: Maybe<boolean>
-  ) => void;
+  selectCell: (position: Position, enableEditor?: boolean | null) => void;
 }
 
 export interface RowsChangeData {
@@ -157,8 +157,8 @@ export interface RowsChangeData {
   columnKeys: string[];
 }
 
-export interface SelectRowEvent<TRow> {
-  row: TRow;
+export interface SelectRowEvent {
+  rowIdx: number;
   checked: boolean;
   isShiftClick: boolean;
 }

@@ -55,7 +55,7 @@ const initialRows: readonly Row[] = [
     col2: 'a2',
     col3: 'a3',
     col4: 'a4'
-  },
+  }
 ];
 
 function setup(allowDragFill = true) {
@@ -70,10 +70,13 @@ function DragFillTest({ allowDragFill = true }: { allowDragFill?: boolean }) {
   const [rows, setRows] = useState(initialRows);
 
   function onFill({ row, sourceColumnKey, targetColumnKeys }: FillEvent<Row>): Row {
-    return targetColumnKeys.reduce((updatedRow, targetColumnKey) => {
-      updatedRow[targetColumnKey] = row[sourceColumnKey];
-      return updatedRow;
-    }, { ...row });
+    return targetColumnKeys.reduce(
+      (updatedRow, targetColumnKey) => {
+        updatedRow[targetColumnKey] = row[sourceColumnKey];
+        return updatedRow;
+      },
+      { ...row }
+    );
   }
 
   return (

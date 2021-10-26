@@ -159,7 +159,7 @@ export default function HeaderCell<R, SR>({
       />
     );
   } else if (column.sortable) {
-    cell =  (
+    cell = (
       <SortableHeaderCell
         onSort={onSort}
         sortDirection={sortDirection}

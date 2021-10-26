@@ -91,7 +91,11 @@ export default function DragHandle<R, SR>({
       }
     }
 
-    const updatedRow = onFill({ row, sourceColumnKey: sourceColumn.key, targetColumnKeys: columnKeys });
+    const updatedRow = onFill({
+      row,
+      sourceColumnKey: sourceColumn.key,
+      targetColumnKeys: columnKeys
+    });
 
     if (updatedRow !== row) {
       onRowsChange?.(updatedRow, { index: rowIdx, columnKeys });

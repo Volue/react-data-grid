@@ -336,24 +336,17 @@ function DataGrid<R, SR, K extends Key>(
   const selectRowLatest = useLatestFunc(selectRow);
   const selectAllRowsLatest = useLatestFunc(selectAllRows);
   const handleFormatterRowChangeLatest = useLatestFunc(updateRow);
-  const selectViewportCellLatest = useLatestFunc(
-    (row: R, column: CalculatedColumn<R, SR>, enableEditor: Maybe<boolean>) => {
-      const rowIdx = rows.indexOf(row);
-      selectCell({ rowIdx, idx: column.idx }, enableEditor);
-    }
-  );
+  const selectViewportCellLatest = useLatestFunc(selectCell);
   const selectGroupLatest = useLatestFunc((rowIdx: number) => {
     selectCell({ rowIdx, idx: -1 });
   });
   const selectHeaderCellLatest = useLatestFunc((idx: number) => {
     selectCell({ rowIdx: -1, idx });
   });
-  const selectSummaryCellLatest = useLatestFunc(
-    (summaryRow: SR, column: CalculatedColumn<R, SR>) => {
-      const rowIdx = summaryRows!.indexOf(summaryRow) + headerRowsCount + rows.length - 1;
-      selectCell({ rowIdx, idx: column.idx });
-    }
-  );
+  const selectSummaryCellLatest = useLatestFunc(({ idx, rowIdx: summaryRowIdx }: Position) => {
+    const rowIdx = summaryRowIdx + headerRowsCount + rows.length - 1;
+    selectCell({ rowIdx, idx });
+  });
   const toggleGroupLatest = useLatestFunc(toggleGroup);
 
   /**
@@ -418,10 +411,11 @@ function DataGrid<R, SR, K extends Key>(
   /**
    * event handlers
    */
-  function selectRow({ row, checked, isShiftClick }: SelectRowEvent<R>) {
+  function selectRow({ rowIdx, checked, isShiftClick }: SelectRowEvent) {
     if (!onSelectedRowsChange) return;
 
     assertIsValidKeyGetter<R, K>(rowKeyGetter);
+    const row = rows[rowIdx];
     const newSelectedRows = new Set(selectedRows);
     if (isGroupRow(row)) {
       for (const childRow of row.childRows) {
@@ -440,7 +434,6 @@ function DataGrid<R, SR, K extends Key>(
     if (checked) {
       newSelectedRows.add(rowKey);
       const previousRowIdx = lastSelectedRowIdx.current;
-      const rowIdx = rows.indexOf(row);
       lastSelectedRowIdx.current = rowIdx;
       if (isShiftClick && previousRowIdx !== -1 && previousRowIdx !== rowIdx) {
         const step = sign(rowIdx - previousRowIdx);
@@ -615,7 +608,11 @@ function DataGrid<R, SR, K extends Key>(
     if (isSelectable && shiftKey && key === ' ') {
       assertIsValidKeyGetter<R, K>(rowKeyGetter);
       const rowKey = rowKeyGetter(row);
-      selectRow({ row, checked: !selectedRows.has(rowKey), isShiftClick: false });
+      selectRow({
+        rowIdx: selectedPosition.rowIdx,
+        checked: !selectedRows.has(rowKey),
+        isShiftClick: false
+      });
       // do not scroll
       event.preventDefault();
       return;
@@ -889,6 +886,7 @@ function DataGrid<R, SR, K extends Key>(
         column={column}
         colSpan={colSpan}
         row={row}
+        rowIdx={selectedPosition.rowIdx}
         onRowChange={onRowChange}
         closeEditor={closeEditor}
         scrollToCell={() => {

@@ -79,7 +79,7 @@ export function SelectCellFormatter({
   }
 
   return (
-    <label className={clsx(checkboxLabelClassname, { [checkboxLabelDisabledClassname]: disabled })}>
+    <label className={clsx(checkboxLabelClassname, disabled && checkboxLabelDisabledClassname)}>
       <input
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}

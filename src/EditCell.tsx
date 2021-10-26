@@ -32,6 +32,7 @@ type SharedCellRendererProps<R, SR> = Pick<CellRendererProps<R, SR>, 'colSpan'>;
 interface EditCellProps<R, SR>
   extends Omit<EditorProps<R, SR>, 'onClose'>,
     SharedCellRendererProps<R, SR> {
+  rowIdx: number;
   closeEditor: () => void;
   scrollToCell: () => void;
 }
@@ -40,6 +41,7 @@ export default function EditCell<R, SR>({
   column,
   colSpan,
   row,
+  rowIdx,
   onRowChange,
   closeEditor,
   scrollToCell
@@ -121,7 +123,13 @@ export default function EditCell<R, SR>({
         <>
           <column.editor column={column} row={row} onRowChange={onRowChange} onClose={onClose} />
           {column.editorOptions?.renderFormatter && (
-            <column.formatter column={column} row={row} isCellSelected onRowChange={onRowChange} />
+            <column.formatter
+              column={column}
+              row={row}
+              rowIdx={rowIdx}
+              isCellSelected
+              onRowChange={onRowChange}
+            />
           )}
         </>
       )}

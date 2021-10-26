@@ -346,12 +346,16 @@ function EditorTest({
       <button type="button" onClick={() => onSave?.(rows)}>
         save
       </button>
-      <DataGrid columns={columns} rows={rows} onRowsChange={(updatedRow, { index }) => {
-        const rowsCopy = [...rows];
-        rowsCopy[index] = updatedRow;
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        onRowsChange={(updatedRow, { index }) => {
+          const rowsCopy = [...rows];
+          rowsCopy[index] = updatedRow;
 
-        setRows(rowsCopy);
-      }} />
+          setRows(rowsCopy);
+        }}
+      />
     </StrictMode>
   );
 }

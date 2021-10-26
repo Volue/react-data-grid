@@ -1,12 +1,12 @@
 import { memo } from 'react';
 
 import { getCellStyle, getCellClassname } from './utils';
-import type { CalculatedColumn, CellRendererProps } from './types';
+import type { Position, CellRendererProps } from './types';
 import { useRovingCellRef } from './hooks';
 
 interface SharedCellRendererProps<R, SR>
-  extends Pick<CellRendererProps<R, SR>, 'column' | 'colSpan' | 'isCellSelected'> {
-  selectCell: (row: SR, column: CalculatedColumn<R, SR>) => void;
+  extends Pick<CellRendererProps<R, SR>, 'column' | 'colSpan' | 'isCellSelected' | 'rowIdx'> {
+  selectCell: (position: Position) => void;
 }
 
 interface SummaryCellProps<R, SR> extends SharedCellRendererProps<R, SR> {
@@ -17,6 +17,7 @@ function SummaryCell<R, SR>({
   column,
   colSpan,
   row,
+  rowIdx,
   isCellSelected,
   selectCell
 }: SummaryCellProps<R, SR>) {
@@ -28,7 +29,7 @@ function SummaryCell<R, SR>({
   );
 
   function onClick() {
-    selectCell(row, column);
+    selectCell({ rowIdx, idx: column.idx });
   }
 
   return (

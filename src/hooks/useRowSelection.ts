@@ -7,12 +7,12 @@ export const RowSelectionProvider = RowSelectionContext.Provider;
 
 const RowSelectionChangeContext = createContext<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ((selectRowEvent: SelectRowEvent<any>) => void) | undefined
+  ((selectRowEvent: SelectRowEvent) => void) | undefined
 >(undefined);
 
 export const RowSelectionChangeProvider = RowSelectionChangeContext.Provider;
 
-export function useRowSelection<R>(): [boolean, (selectRowEvent: SelectRowEvent<R>) => void] {
+export function useRowSelection(): [boolean, (selectRowEvent: SelectRowEvent) => void] {
   const rowSelectionContext = useContext(RowSelectionContext);
   const rowSelectionChangeContext = useContext(RowSelectionChangeContext);
 

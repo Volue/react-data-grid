@@ -1,6 +1,6 @@
 export { default } from './DataGrid';
 export type { DataGridProps, DataGridHandle } from './DataGrid';
-export { RowWithRef as Row } from './Row';
+export { RowWithRef as Row, Row as RawRow } from './Row';
 export * from './Columns';
 export * from './formatters';
 export { default as TextEditor } from './editors/TextEditor';

@@ -16,16 +16,18 @@ const initialRows: readonly Row[] = [{ name: 'Tacitus Kilgore' }];
 function Test() {
   const [rows, setRows] = useState(initialRows);
 
-  return <DataGrid
-    columns={columns}
-    rows={rows}
-    onRowsChange={(updatedRow, { index }) => {
-      const rowsCopy = [...rows];
-      rowsCopy[index] = updatedRow;
+  return (
+    <DataGrid
+      columns={columns}
+      rows={rows}
+      onRowsChange={(updatedRow, { index }) => {
+        const rowsCopy = [...rows];
+        rowsCopy[index] = updatedRow;
 
-      setRows(rowsCopy);
-    }}
-  />;
+        setRows(rowsCopy);
+      }}
+    />
+  );
 }
 
 test('TextEditor', () => {

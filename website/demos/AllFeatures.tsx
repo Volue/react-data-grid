@@ -174,10 +174,13 @@ export default function AllFeatures() {
   const [selectedRows, setSelectedRows] = useState<ReadonlySet<string>>(() => new Set());
 
   function handleFill({ row, sourceColumnKey, targetColumnKeys }: FillEvent<Row>): Row {
-    return targetColumnKeys.reduce((updatedRow, targetColumnKey) => {
-      updatedRow[targetColumnKey] = row[sourceColumnKey];
-      return updatedRow;
-    }, { ...row });
+    return targetColumnKeys.reduce(
+      (updatedRow, targetColumnKey) => {
+        updatedRow[targetColumnKey] = row[sourceColumnKey];
+        return updatedRow;
+      },
+      { ...row }
+    );
   }
 
   function handlePaste({
