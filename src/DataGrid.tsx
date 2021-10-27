@@ -159,6 +159,7 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   rowRenderer?: Maybe<React.ComponentType<RowRendererProps<R, SR>>>;
   noRowsFallback?: React.ReactNode;
   rowClass?: Maybe<(row: R) => Maybe<string>>;
+  enableCellSelect?: Maybe<boolean>;
   'data-testid'?: Maybe<string>;
 }
 
@@ -207,6 +208,7 @@ function DataGrid<R, SR, K extends Key>(
     className,
     style,
     rowClass,
+    enableCellSelect = true,
     // ARIA
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledBy,
@@ -654,6 +656,7 @@ function DataGrid<R, SR, K extends Key>(
 
   function isCellEditable(position: Position): boolean {
     return (
+      enableCellSelect === true &&
       isCellWithinViewportBounds(position) &&
       isSelectedCellEditable({ columns, rows, selectedPosition: position, isGroupRow })
     );
@@ -835,7 +838,8 @@ function DataGrid<R, SR, K extends Key>(
       selectedPosition.rowIdx !== rowIdx ||
       selectedPosition.mode === 'EDIT' ||
       hasGroups || // drag fill is not supported when grouping is enabled
-      onFill == null
+      onFill == null ||
+      !enableCellSelect
     ) {
       return;
     }
