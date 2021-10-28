@@ -1049,6 +1049,7 @@ function DataGrid<R, SR, K extends Key>(
     >
       <HeaderRow
         columns={viewportColumns}
+        columnMetrics={columnMetrics}
         onColumnResize={handleColumnResize}
         allRowsSelected={allRowsSelected}
         onAllRowsSelectionChange={selectAllRowsLatest}

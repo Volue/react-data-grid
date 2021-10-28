@@ -37,11 +37,13 @@ export interface HeaderCellProps<R, SR> extends SharedHeaderRowProps<R, SR> {
   column: CalculatedColumn<R, SR>;
   colSpan: number | undefined;
   isCellSelected: boolean;
+  left: number;
 }
 
 export default function HeaderCell<R, SR>({
   column,
   colSpan,
+  left,
   isCellSelected,
   onColumnResize,
   allRowsSelected,
@@ -150,6 +152,7 @@ export default function HeaderCell<R, SR>({
     cell = (
       <column.headerRenderer
         column={column}
+        left={left}
         sortDirection={sortDirection}
         priority={priority}
         onSort={onSort}
@@ -162,6 +165,7 @@ export default function HeaderCell<R, SR>({
     cell = (
       <SortableHeaderCell
         onSort={onSort}
+        left={left}
         sortDirection={sortDirection}
         priority={priority}
         isCellSelected={isCellSelected}

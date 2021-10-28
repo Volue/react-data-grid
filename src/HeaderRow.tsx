@@ -13,8 +13,14 @@ type SharedDataGridProps<R, SR, K extends React.Key> = Pick<
   'sortColumns' | 'onSortColumnsChange'
 >;
 
+interface ColumnMetric {
+  width: number;
+  left: number;
+}
+
 export interface HeaderRowProps<R, SR, K extends React.Key> extends SharedDataGridProps<R, SR, K> {
   columns: readonly CalculatedColumn<R, SR>[];
+  columnMetrics: ReadonlyMap<CalculatedColumn<R, SR>, ColumnMetric>;
   allRowsSelected: boolean;
   onAllRowsSelectionChange: (checked: boolean) => void;
   onColumnResize: (column: CalculatedColumn<R, SR>, width: number) => void;
@@ -49,6 +55,7 @@ const headerRowClassname = `rdg-header-row ${headerRow}`;
 
 function HeaderRow<R, SR, K extends React.Key>({
   columns,
+  columnMetrics,
   allRowsSelected,
   onAllRowsSelectionChange,
   onColumnResize,
@@ -64,6 +71,7 @@ function HeaderRow<R, SR, K extends React.Key>({
   const cells = [];
   for (let index = 0; index < columns.length; index++) {
     const column = columns[index];
+    const { left } = columnMetrics.get(column)!;
     const colSpan = getColSpan(column, lastFrozenColumnIndex, { type: 'HEADER' });
     if (colSpan !== undefined) {
       index += colSpan - 1;
@@ -73,6 +81,7 @@ function HeaderRow<R, SR, K extends React.Key>({
       <HeaderCell<R, SR>
         key={column.key}
         column={column}
+        left={left}
         colSpan={colSpan}
         isCellSelected={selectedCellIdx === column.idx}
         onColumnResize={onColumnResize}
