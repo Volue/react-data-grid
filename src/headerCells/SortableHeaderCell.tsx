@@ -34,7 +34,7 @@ const arrowClassname = `rdg-sort-arrow ${arrow}`;
 
 type SharedHeaderCellProps<R, SR> = Pick<
   HeaderRendererProps<R, SR>,
-  'sortDirection' | 'onSort' | 'priority' | 'isCellSelected' | 'left'
+  'sortDirection' | 'onSort' | 'priority' | 'isCellSelected'
 >;
 
 interface Props<R, SR> extends SharedHeaderCellProps<R, SR> {

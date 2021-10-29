@@ -10,7 +10,8 @@ import {
   useViewportColumns,
   useViewportRows,
   useLatestFunc,
-  RowSelectionChangeProvider
+  RowSelectionChangeProvider,
+  ColumnMetricsProvider
 } from './hooks';
 import HeaderRow from './HeaderRow';
 import Row from './Row';
@@ -1047,19 +1048,20 @@ function DataGrid<R, SR, K extends Key>(
       onKeyDown={handleKeyDown}
       data-testid={testId}
     >
-      <HeaderRow
-        columns={viewportColumns}
-        columnMetrics={columnMetrics}
-        onColumnResize={handleColumnResize}
-        allRowsSelected={allRowsSelected}
-        onAllRowsSelectionChange={selectAllRowsLatest}
-        sortColumns={sortColumns}
-        onSortColumnsChange={onSortColumnsChange}
-        lastFrozenColumnIndex={lastFrozenColumnIndex}
-        selectedCellIdx={isHeaderRowSelected ? selectedPosition.idx : undefined}
-        selectCell={selectHeaderCellLatest}
-        shouldFocusGrid={!selectedCellIsWithinSelectionBounds}
-      />
+      <ColumnMetricsProvider value={columnMetrics}>
+        <HeaderRow
+          columns={viewportColumns}
+          onColumnResize={handleColumnResize}
+          allRowsSelected={allRowsSelected}
+          onAllRowsSelectionChange={selectAllRowsLatest}
+          sortColumns={sortColumns}
+          onSortColumnsChange={onSortColumnsChange}
+          lastFrozenColumnIndex={lastFrozenColumnIndex}
+          selectedCellIdx={isHeaderRowSelected ? selectedPosition.idx : undefined}
+          selectCell={selectHeaderCellLatest}
+          shouldFocusGrid={!selectedCellIsWithinSelectionBounds}
+        />
+      </ColumnMetricsProvider>
       {rows.length === 0 && noRowsFallback ? (
         noRowsFallback
       ) : (

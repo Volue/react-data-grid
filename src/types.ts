@@ -103,7 +103,6 @@ export interface EditorProps<TRow, TSummaryRow = unknown> {
 
 export interface HeaderRendererProps<TRow, TSummaryRow = unknown> {
   column: CalculatedColumn<TRow, TSummaryRow>;
-  left: number;
   sortDirection: SortDirection | undefined;
   priority: number | undefined;
   onSort: (ctrlClick: boolean) => void;

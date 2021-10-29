@@ -9,3 +9,4 @@ export * from './useRovingRowRef';
 export * from './useRowSelection';
 export * from './useViewportColumns';
 export * from './useViewportRows';
+export * from './useColumnMetrics';
