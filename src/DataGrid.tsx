@@ -275,6 +275,7 @@ function DataGrid<R, SR, K extends Key>(
     colSpanColumns,
     colOverscanStartIdx,
     colOverscanEndIdx,
+    colVisibleStartIdx,
     layoutCssVars,
     columnMetrics,
     totalColumnWidth,
@@ -373,10 +374,11 @@ function DataGrid<R, SR, K extends Key>(
     scrollToColumn(idx: number) {
       scrollToCell({ idx });
     },
-    getScroll() {
+    getScrollState() {
       return {
         scrollTop,
-        scrollLeft
+        scrollLeft,
+        colVisibleStartIdx
       };
     },
     scrollToRow(rowIdx: number) {

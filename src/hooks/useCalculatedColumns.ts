@@ -186,9 +186,13 @@ export function useCalculatedColumns<R, SR>({
     return { layoutCssVars, totalColumnWidth, totalFrozenColumnWidth, columnMetrics };
   }, [columnWidths, columns, viewportWidth, minColumnWidth, lastFrozenColumnIndex]);
 
-  const [colOverscanStartIdx, colOverscanEndIdx] = useMemo((): [number, number] => {
+  const [colVisibleStartIdx, colOverscanStartIdx, colOverscanEndIdx] = useMemo((): [
+    number,
+    number,
+    number
+  ] => {
     if (!enableVirtualization) {
-      return [0, columns.length - 1];
+      return [0, 0, columns.length - 1];
     }
     // get the viewport's left side and right side positions for non-frozen columns
     const viewportLeft = scrollLeft + totalFrozenColumnWidth;
@@ -199,7 +203,7 @@ export function useCalculatedColumns<R, SR>({
 
     // skip rendering non-frozen columns if the frozen columns cover the entire viewport
     if (viewportLeft >= viewportRight) {
-      return [firstUnfrozenColumnIdx, firstUnfrozenColumnIdx];
+      return [firstUnfrozenColumnIdx, firstUnfrozenColumnIdx, firstUnfrozenColumnIdx];
     }
 
     // get the first visible non-frozen column index
@@ -229,7 +233,7 @@ export function useCalculatedColumns<R, SR>({
     const colOverscanStartIdx = max(firstUnfrozenColumnIdx, colVisibleStartIdx - 1);
     const colOverscanEndIdx = min(lastColIdx, colVisibleEndIdx + 1);
 
-    return [colOverscanStartIdx, colOverscanEndIdx];
+    return [colVisibleStartIdx, colOverscanStartIdx, colOverscanEndIdx];
   }, [
     columnMetrics,
     columns,
@@ -244,6 +248,7 @@ export function useCalculatedColumns<R, SR>({
     columns,
     colSpanColumns,
     colOverscanStartIdx,
+    colVisibleStartIdx,
     colOverscanEndIdx,
     layoutCssVars,
     columnMetrics,
