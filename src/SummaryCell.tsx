@@ -25,7 +25,7 @@ function SummaryCell<R, SR>({
   const { summaryFormatter: SummaryFormatter, summaryCellClass } = column;
   const className = getCellClassname(
     column,
-    typeof summaryCellClass === 'function' ? summaryCellClass(row) : summaryCellClass
+    typeof summaryCellClass === 'function' ? summaryCellClass(row, column) : summaryCellClass
   );
 
   function onClick() {

@@ -15,9 +15,13 @@ export interface Column<TRow, TSummaryRow = unknown> {
   readonly minWidth?: Maybe<number>;
   /** Maximum column width in px. */
   readonly maxWidth?: Maybe<number>;
-  readonly cellClass?: Maybe<string | ((row: TRow) => Maybe<string>)>;
+  readonly cellClass?: Maybe<
+    string | ((row: TRow, column: Column<TRow, TSummaryRow>) => Maybe<string>)
+  >;
   readonly headerCellClass?: Maybe<string>;
-  readonly summaryCellClass?: Maybe<string | ((row: TSummaryRow) => Maybe<string>)>;
+  readonly summaryCellClass?: Maybe<
+    string | ((row: TSummaryRow, column: Column<TRow, TSummaryRow>) => Maybe<string>)
+  >;
   /** Formatter to be used to render the cell content */
   readonly formatter?: Maybe<React.ComponentType<FormatterProps<TRow, TSummaryRow>>>;
   /** Formatter to be used to render the summary cell content */

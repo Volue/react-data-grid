@@ -105,7 +105,7 @@ export default function EditCell<R, SR>({
     column,
     'rdg-editor-container',
     !column.editorOptions?.renderFormatter && cellEditing,
-    typeof cellClass === 'function' ? cellClass(row) : cellClass
+    typeof cellClass === 'function' ? cellClass(row, column) : cellClass
   );
 
   return (

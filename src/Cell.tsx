@@ -47,7 +47,7 @@ function Cell<R, SR>({
       [cellCopiedClassname]: isCopied,
       [cellDraggedOverClassname]: isDraggedOver
     },
-    typeof cellClass === 'function' ? cellClass(row) : cellClass
+    typeof cellClass === 'function' ? cellClass(row, column) : cellClass
   );
 
   function selectCellWrapper(openEditor?: boolean | null) {
