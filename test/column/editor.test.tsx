@@ -241,7 +241,7 @@ describe('Editor', () => {
       expect(getCellsAtRowIndex(0)[1]).toHaveTextContent('abc');
     });
 
-    it.skip('should not steal focus back to the cell after being closed by clicking outside the grid', async () => {
+    it('should not steal focus back to the cell after being closed by clicking outside the grid', async () => {
       const column: Column<unknown> = {
         key: 'col',
         name: 'Column',
