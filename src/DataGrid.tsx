@@ -1068,7 +1068,7 @@ function DataGrid<R, SR, K extends Key>(
         noRowsFallback
       ) : (
         <>
-          <div style={{ height: max(totalRowHeight, clientHeight) }} />
+          <div className="rdg-total-height-row" style={{ height: max(totalRowHeight, clientHeight) }} />
           <RowSelectionChangeProvider value={selectRowLatest}>
             {getViewportRows()}
           </RowSelectionChangeProvider>
