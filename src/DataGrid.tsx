@@ -1042,7 +1042,7 @@ function DataGrid<R, SR, K extends Key>(
       aria-multiselectable={isSelectable ? true : undefined}
       aria-colcount={columns.length}
       aria-rowcount={headerRowsCount + rowsCount + summaryRowsCount}
-      className={clsx(rootClassname, { [viewportDraggingClassname]: isDragging }, className)}
+      className={clsx(rootClassname, isDragging && viewportDraggingClassname, className)}
       style={
         {
           ...style,
@@ -1076,7 +1076,10 @@ function DataGrid<R, SR, K extends Key>(
       ) : (
         <>
           <div
-            className="rdg-total-height-row"
+            className={clsx(
+              'rdg-total-height-row',
+              totalRowHeight > clientHeight && 'is-overflowing'
+            )}
             style={{ height: max(totalRowHeight, clientHeight) }}
           />
           <RowSelectionChangeProvider value={selectRowLatest}>
