@@ -21,7 +21,7 @@ const cellDraggedOver = css`
 
 const cellDraggedOverClassname = `rdg-cell-dragged-over ${cellDraggedOver}`;
 
-function Cell<R, SR>({
+export function Cell<R, SR>({
   column,
   colSpan,
   isCellSelected,
