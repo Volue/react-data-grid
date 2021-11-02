@@ -137,6 +137,7 @@ export interface RowRendererProps<TRow, TSummaryRow = unknown>
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'style' | 'children'> {
   viewportColumns: readonly CalculatedColumn<TRow, TSummaryRow>[];
   row: TRow;
+  cellRenderer?: React.ComponentType<CellRendererProps<TRow, TSummaryRow>> | null;
   rowIdx: number;
   selectedCellIdx: number | undefined;
   copiedCellIdx: number | undefined;

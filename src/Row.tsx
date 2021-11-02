@@ -10,6 +10,7 @@ import type { RowRendererProps } from './types';
 
 export function Row<R, SR>(
   {
+    cellRenderer,
     className,
     rowIdx,
     selectedCellIdx,
@@ -47,6 +48,7 @@ export function Row<R, SR>(
     className
   );
 
+  const CellRenderer = cellRenderer ?? Cell;
   const cells = [];
 
   for (let index = 0; index < viewportColumns.length; index++) {
@@ -74,7 +76,7 @@ export function Row<R, SR>(
       cells.push(selectedCellEditor);
     } else {
       cells.push(
-        <Cell
+        <CellRenderer
           key={column.key}
           column={column}
           colSpan={colSpan}
