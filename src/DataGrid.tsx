@@ -271,11 +271,8 @@ function DataGrid<R, SR, K extends Key>(
       length !== 0 &&
       selectedRows != null &&
       rowKeyGetter != null &&
-      rawRows.every(
-        (row) =>
-          (selectedRowsFilter ? selectedRowsFilter(row) : true) &&
-          selectedRows.has(rowKeyGetter(row))
-      )
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      rawRows.every((row) => selectedRowsFilter?.(row) || selectedRows.has(rowKeyGetter(row)))
     );
   }, [rawRows, selectedRows, selectedRowsFilter, rowKeyGetter]);
 
