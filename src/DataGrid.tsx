@@ -121,6 +121,7 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
    */
   /** Set of selected row keys */
   selectedRows?: Maybe<ReadonlySet<K>>;
+  selectedRowsFilter?: Maybe<(row: R) => boolean>;
   /** Function called whenever row selection is changed */
   onSelectedRowsChange?: Maybe<(selectedRows: Set<K>) => void>;
   /** Used for multi column sorting */
@@ -188,6 +189,7 @@ function DataGrid<R, SR, K extends Key>(
     summaryRowHeight: rawSummaryRowHeight,
     // Feature props
     selectedRows,
+    selectedRowsFilter,
     onSelectedRowsChange,
     sortColumns,
     onSortColumnsChange,
@@ -269,10 +271,13 @@ function DataGrid<R, SR, K extends Key>(
       length !== 0 &&
       selectedRows != null &&
       rowKeyGetter != null &&
-      selectedRows.size >= length &&
-      rawRows.every((row) => selectedRows.has(rowKeyGetter(row)))
+      rawRows.every(
+        (row) =>
+          (selectedRowsFilter ? selectedRowsFilter(row) : true) &&
+          selectedRows.has(rowKeyGetter(row))
+      )
     );
-  }, [rawRows, selectedRows, rowKeyGetter]);
+  }, [rawRows, selectedRows, selectedRowsFilter, rowKeyGetter]);
 
   const {
     columns,
