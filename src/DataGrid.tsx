@@ -1035,6 +1035,9 @@ function DataGrid<R, SR, K extends Key>(
     setDraggedOverCellIdx(undefined);
   }
 
+  const isOverflowingY = totalRowHeight > clientHeight;
+  const isOverflowingX = totalColumnWidth > gridWidth;
+
   return (
     <div
       role={hasGroups ? 'treegrid' : 'grid'}
@@ -1080,7 +1083,9 @@ function DataGrid<R, SR, K extends Key>(
           <div
             className={clsx(
               'rdg-total-height-row',
-              totalRowHeight > clientHeight && 'is-overflowing'
+              isOverflowingY || isOverflowingX && 'is-overflowing',
+              isOverflowingY && 'is-overflowing-y',
+              isOverflowingX && 'is-overflowing-x'
             )}
             style={{ height: max(totalRowHeight, clientHeight) }}
           />
