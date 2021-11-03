@@ -1087,7 +1087,7 @@ function DataGrid<R, SR, K extends Key>(
               isOverflowingY && 'is-overflowing-y',
               isOverflowingX && 'is-overflowing-x'
             )}
-            style={{ height: max(totalRowHeight, clientHeight) }}
+            style={{ height: max(totalRowHeight, clientHeight), width: max(totalColumnWidth, gridWidth) }}
           />
           <RowSelectionChangeProvider value={selectRowLatest}>
             {getViewportRows()}
