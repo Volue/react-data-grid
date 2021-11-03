@@ -71,7 +71,7 @@ const initialPosition: SelectCellState = {
 export interface DataGridHandle {
   element: HTMLDivElement | null;
   scrollToColumn: (colIdx: number) => void;
-  scrollToRow: (rowIdx: number) => void;
+  scrollToRow: (rowIdx: number, scrollBehavior?: ScrollBehavior) => void;
   selectCell: (position: Position, enableEditor?: Maybe<boolean>) => void;
 }
 
@@ -387,12 +387,12 @@ function DataGrid<R, SR, K extends Key>(
         colVisibleStartIdx
       };
     },
-    scrollToRow(rowIdx: number) {
+    scrollToRow(rowIdx: number, scrollBehavior = 'smooth') {
       const { current } = gridRef;
       if (!current) return;
       current.scrollTo({
         top: getRowTop(rowIdx),
-        behavior: 'smooth'
+        behavior: scrollBehavior
       });
     },
     selectCell
