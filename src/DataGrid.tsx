@@ -1083,11 +1083,14 @@ function DataGrid<R, SR, K extends Key>(
           <div
             className={clsx(
               'rdg-total-height-row',
-              isOverflowingY || isOverflowingX && 'is-overflowing',
+              isOverflowingY || (isOverflowingX && 'is-overflowing'),
               isOverflowingY && 'is-overflowing-y',
               isOverflowingX && 'is-overflowing-x'
             )}
-            style={{ height: max(totalRowHeight, clientHeight), width: max(totalColumnWidth, gridWidth) }}
+            style={{
+              height: max(totalRowHeight, clientHeight),
+              width: max(totalColumnWidth, gridWidth)
+            }}
           />
           <RowSelectionChangeProvider value={selectRowLatest}>
             {getViewportRows()}

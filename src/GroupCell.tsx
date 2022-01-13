@@ -38,6 +38,12 @@ function GroupCell<R, SR>({
   // Only make the cell clickable if the group level matches
   const isLevelMatching = column.rowGroup && groupColumnIndex === column.idx;
 
+  const { cellClass } = column;
+  const className = getCellClassname(
+    column,
+    typeof cellClass !== 'function' ? cellClass : undefined
+  );
+
   return (
     <div
       role="gridcell"
@@ -46,7 +52,7 @@ function GroupCell<R, SR>({
       ref={ref}
       tabIndex={tabIndex}
       key={column.key}
-      className={getCellClassname(column)}
+      className={className}
       style={{
         ...getCellStyle(column),
         cursor: isLevelMatching ? 'pointer' : 'default'
