@@ -129,7 +129,7 @@ export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends Sha
   onSortColumnsChange?: Maybe<(sortColumns: SortColumn[]) => void>;
   defaultColumnOptions?: Maybe<DefaultColumnOptions<R, SR>>;
   groupBy?: Maybe<readonly string[]>;
-  rowGrouper?: Maybe<(rows: readonly R[], columnKey: string) => Record<string, readonly R[]>>;
+  rowGrouper?: Maybe<(rows: readonly R[], columnKey: string) => Map<string, readonly R[]>>;
   expandedGroupIds?: Maybe<ReadonlySet<unknown>>;
   onExpandedGroupIdsChange?: Maybe<(expandedGroupIds: Set<unknown>) => void>;
   onFill?: Maybe<(event: FillEvent<R>) => R>;

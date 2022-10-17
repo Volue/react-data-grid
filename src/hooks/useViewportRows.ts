@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { floor, max, min } from '../utils';
 import type { GroupRow, Maybe, RowHeightArgs } from '../types';
 
-type GroupByDictionary<TRow> = Record<
+type GroupByDictionary<TRow> = Map<
   string,
   {
     readonly childRows: readonly TRow[];
@@ -17,7 +17,7 @@ interface ViewportRowsArgs<R> {
   clientHeight: number;
   scrollTop: number;
   groupBy: readonly string[];
-  rowGrouper: Maybe<(rows: readonly R[], columnKey: string) => Record<string, readonly R[]>>;
+  rowGrouper: Maybe<(rows: readonly R[], columnKey: string) => Map<string, readonly R[]>>;
   expandedGroupIds: Maybe<ReadonlySet<unknown>>;
   enableVirtualization: boolean;
 }
@@ -46,14 +46,15 @@ export function useViewportRows<R>({
       startRowIndex: number
     ): [Readonly<GroupByDictionary<R>>, number] => {
       let groupRowsCount = 0;
-      const groups: GroupByDictionary<R> = {};
-      for (const [key, childRows] of Object.entries(rowGrouper(rows, groupByKey))) {
+      const groups: GroupByDictionary<R> = new Map();
+      const group = rowGrouper(rows, groupByKey);
+      for (const [key, childRows] of group.entries()) {
         // Recursively group each parent group
         const [childGroups, childRowsCount] =
           remainingGroupByKeys.length === 0
             ? [childRows, childRows.length]
             : groupRows(childRows, remainingGroupByKeys, startRowIndex + groupRowsCount + 1); // 1 for parent row
-        groups[key] = { childRows, childGroups, startRowIndex: startRowIndex + groupRowsCount };
+        groups.set(key, { childRows, childGroups, startRowIndex: startRowIndex + groupRowsCount });
         groupRowsCount += childRowsCount + 1; // 1 for parent row
       }
 
@@ -80,11 +81,12 @@ export function useViewportRows<R>({
         flattenedRows.push(...rows);
         return;
       }
-      Object.keys(rows).forEach((groupKey, posInSet, keys) => {
+
+      Array.from(rows.keys()).forEach((groupKey, posInSet, keys) => {
         // TODO: should users have control over the generated key?
         const id = parentId !== undefined ? `${parentId}__${groupKey}` : groupKey;
         const isExpanded = expandedGroupIds?.has(id) ?? false;
-        const { childRows, childGroups, startRowIndex } = rows[groupKey];
+        const { childRows, childGroups, startRowIndex } = rows.get(groupKey)!;
 
         const groupRow: GroupRow<R> = {
           id,
